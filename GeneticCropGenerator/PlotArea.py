@@ -9,6 +9,7 @@ class PlotArea:
     crop = None
     plants: [Plant] = []
     MARGIN = 2
+    BACKGROUND_COLOR = 'yellowgreen'
 
     def __init__(self, plants: [], crop=Crop.square(0, 20), grid=True):
         self.plants = plants
@@ -16,6 +17,7 @@ class PlotArea:
 
         self.ax = plt.gca(aspect='equal')
         self.ax.cla()
+        self.ax.set_facecolor(PlotArea.BACKGROUND_COLOR)
         self.ax.set_xlim((self.crop.minx - self.MARGIN, self.crop.maxx + self.MARGIN))
         self.ax.set_ylim((self.crop.miny - self.MARGIN, self.crop.maxy + self.MARGIN))
         self.ax.grid(grid)
@@ -31,12 +33,12 @@ class PlotArea:
             self.ax.fill(*self.crop.animal_shape.exterior.xy, color='tab:green', alpha=0.1)
 
     def show(self):
-        self.plot_crop()
+        #self.plot_crop()
         self.plot_plants()
         plt.show()
 
     def savefig(self, path):
-        self.plot_crop()
+        #self.plot_crop()
         self.plot_plants()
         plt.axis('off')
         plt.savefig(path+'.svg')
