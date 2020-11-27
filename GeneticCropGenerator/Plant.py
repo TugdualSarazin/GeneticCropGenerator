@@ -43,21 +43,6 @@ class Plant():
     def __repr__(self) -> str:
         return self.__str__()
 
-    @staticmethod
-    def plant_types():
-        return [Potato, Tomato, Marigold, Olive, Oignon, Garlic]
-
-    @staticmethod
-    def plants_from_arr(indivs: [float]):
-        plants = []
-        for i in range(0, len(indivs), 3):
-            x = indivs[i]
-            y = indivs[i + 1]
-            id_plant = indivs[i + 2]
-            plant = Plant.plant_types()[id_plant](x, y)
-            plants.append(plant)
-        return plants
-
 class Potato(Plant):
     name = 'Potato'
     color = 'tab:brown'

@@ -8,11 +8,10 @@ from GeneticCropGenerator.Plant import *
 
 
 class Gen:
-    def __init__(self, crop: Crop, desire_production: {str: int}, n_plants=10, n_population=300, n_gen=100,
+    def __init__(self, crop: Crop, n_plants=10, n_population=300, n_gen=100,
                  n_hof=1, verbose=True):
         # Gen params
         self.crop = crop
-        self.desire_production = desire_production
         self.N_PLANTS = n_plants
         self.N_POPULATION = n_population
         self.N_GEN = n_gen
@@ -27,7 +26,7 @@ class Gen:
         # Attribute generator
         self.toolbox.register("attr_x", Gen.randx, self)
         self.toolbox.register("attr_y", Gen.randy, self)
-        self.toolbox.register("attr_id_plant", Gen.rand_id_plant)
+        self.toolbox.register("attr_id_plant", Gen.rand_id_plant, self)
 
         # Structure initializers
         self.toolbox.register("individual", tools.initCycle, creator.Individual,
@@ -45,9 +44,9 @@ class Gen:
     def randy(self):
         return random.uniform(self.crop.miny, self.crop.maxy)
 
-    @staticmethod
-    def rand_id_plant():
-        n_plant_types = len(Plant.plant_types()) - 1
+    def rand_id_plant(self):
+        plant_types = self.crop.expected_production.keys()
+        n_plant_types = len(plant_types) - 1
         return random.randint(0, n_plant_types)
 
     def eval_ground_intersect(self, plants: [Plant]):
@@ -110,12 +109,12 @@ class Gen:
 
         # Diff with desire production
         score = 0
-        for des_name, des_val in self.desire_production.items():
+        for des_name, des_val in self.crop.expected_production.items():
             prod_val = prod.get(des_name, 0)
             score += (des_val - abs(des_val - prod_val)) / des_val
 
         # Divide by nb desire production to have a result between [0, 1]
-        nb_production = len(self.desire_production)
+        nb_production = len(self.crop.expected_production)
         if nb_production > 0:
             return score / nb_production
         else:
@@ -131,8 +130,22 @@ class Gen:
 
         return sum_score, 1 / sum_weight
 
+    def plants_from_arr(self, indiv: [float]):
+        plant_types = list(self.crop.expected_production.keys())
+        plants = []
+        for i in range(0, len(indiv), 3):
+            x = indiv[i]
+            y = indiv[i + 1]
+            id_plant = indiv[i + 2]
+            plant = plant_types[id_plant](x, y)
+            plants.append(plant)
+        return plants
+
     def evalOneMax(self, indiv):
-        plants = Plant.plants_from_arr(indiv)
+        #plant_types = list(self.crop.expected_production.keys())
+        #plants = Plant.plants_from_arr(indiv, plant_types)
+        plants = self.plants_from_arr(indiv)
+        self.plants_from_arr(indiv)
         return Gen.adjust_weight([
             (10, self.eval_crop_within(plants)),
             (10, self.eval_ground_intersect(plants)),

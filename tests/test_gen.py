@@ -25,9 +25,11 @@ class PlantGroundSize1(Plant):
     ground_radius = 1
 
 
-crop = Crop.square(0, 25)
+crop = Crop(
+    crop_shape=Crop.square_polygon(0, 25)
+)
 
-gen = Gen(crop=crop, desire_production={}, n_plants=120, n_population=200, n_gen=50,
+gen = Gen(crop=crop, n_plants=120, n_population=200, n_gen=50,
           verbose=True)
 
 
@@ -41,20 +43,23 @@ def test_eval_production():
     plant2 = Plant2(0, 0)
 
     # Mono plant
-    gen.desire_production = {Plant1: 2}
+    crop.expected_production = {Plant1: 2}
+    gen.crop = crop
     assert gen.eval_production([plant1, plant1]) == 1.
     assert gen.eval_production([plant1]) == 0.5
     assert gen.eval_production([plant1, plant1, plant1]) == 0.5
 
     # Multi plants
-    gen.desire_production = {Plant1: 1, Plant2: 4}
+    crop.expected_production = {Plant1: 1, Plant2: 4}
+    gen.crop = crop
     assert gen.eval_production([plant1, plant2, plant2]) == 1.
     assert gen.eval_production([plant1, plant2]) == 0.75
     assert gen.eval_production([plant1, plant2, plant2, plant2]) == 0.75
     assert gen.eval_production([plant1]) == 0.5
 
     # Empty desire production
-    gen.desire_production = {}
+    crop.expected_production = {}
+    gen.crop = crop
     assert gen.eval_production([plant1, plant2, plant2]) == 1.
 
 
@@ -85,7 +90,7 @@ def test_eval_symbiosis_interset():
 
 
 def test_eval_crop_within():
-    gen.crop = Crop.square(0, 10)
+    gen.crop = Crop(crop_shape = Crop.square_polygon(0, 10))
 
     # 100% out
     assert gen.eval_crop_within([PlantGroundSize1(20, 20)]) == 0
@@ -107,7 +112,7 @@ def test_eval_animal_intersect():
         is_help_animal = False
 
     # Init crop with animal area
-    crop = Crop.square(0, 10)
+    crop = Crop.square_polygon(0, 10)
     crop.animal_shape = Polygon([(2, 2), (8, 2), (8, 8), (2, 8)])
     gen.crop = crop
 

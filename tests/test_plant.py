@@ -1,4 +1,4 @@
-from GeneticCropGenerator.Plant import Plant, Potato, Tomato
+from GeneticCropGenerator.Plant import Plant, Potato, Tomato, Olive
 
 
 class PlantSize10(Plant):
@@ -47,7 +47,7 @@ def test_symbiosis_intersect():
 
 def test_plants_from_arr():
     plants_arr = [1.1, 1.2, 0, 2.1, 2.2, 1]
-    plants = Plant.plants_from_arr(plants_arr)
+    plants = Plant.plants_from_arr(plants_arr, [Potato, Tomato, Olive])
 
     assert len(plants) == 2
     plt0 = plants[0]
