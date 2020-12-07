@@ -37,6 +37,9 @@ class Plant():
         else:
             return False
 
+    def csv(self):
+        return ';'.join([self.name, str(self.x), str(self.y), str(self.ground_radius)])
+
     def __str__(self) -> str:
         return f"{self.name}(x={self.x}, y={self.y})"
 
@@ -59,7 +62,7 @@ class Tomato(Plant):
 
 
 class Marigold(Plant):
-    name = 'Mexican marigold'
+    name = 'Marigold'
     color = 'gold'
     ground_radius = 0.5
     symbiosis_radius = 5

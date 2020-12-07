@@ -171,5 +171,6 @@ class Gen:
         # pop, log = algorithms.eaGenerateUpdate(self.toolbox, ngen=self.N_GEN, stats=stats, halloffame=hof, verbose=self.VERBOSE)
 
         # return pop, log, hof
+        return [self.plants_from_arr(indivs) for indivs in hof]
         return hof
         # return Gen.create_plants(hof[0])

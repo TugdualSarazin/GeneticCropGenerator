@@ -6,9 +6,9 @@ from GeneticCropGenerator.Plant import Plant
 
 class PlotArea:
     MARGIN = 5
-    BACKGROUND_COLOR = '#6a794c'
+    #BACKGROUND_COLOR = '#6a794c'
     GRID = False
-    #BACKGROUND_COLOR = 'w'
+    BACKGROUND_COLOR = 'w'
     ax = None
     crop = None
     minx = None
